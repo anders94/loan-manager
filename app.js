@@ -203,7 +203,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	    if (data.targetRate > 40) {
 		duration = 30;
 	    }
-	    if (data.targetRate > 50) {
+	    if (exchangeName === 'poloniex' && data.targetRate > 50) {
 		duration = 60;
 	    }
 	    console.log('  creating offer for', amount, currency, '($'+(amount * data.usdPrice).toFixed(2)+') at',
