@@ -53,12 +53,18 @@ function manage(exchangeName, handle, currency, settings, cb) {
     var data = {};
     async.series([function(cb) {
 	// 1. get this exchange's usd rate for this currency
-	handle.lastUSDPrice(currency, function(err, usdPrice) {
-	    data.usdPrice = usdPrice;
-	    setTimeout(function() {
-		cb(err);
-	    }, config.msDelayBetweenAPICalls);
-	});
+	if (curency.toLowerCase() !== 'usd') {
+	  handle.lastUSDPrice(currency, function(err, usdPrice) {
+	      data.usdPrice = usdPrice;
+	      setTimeout(function() {
+		  cb(err);
+	      }, config.msDelayBetweenAPICalls);
+	  });
+	}
+	else {
+	    data.usdPrice = 1;
+	    cb();
+	}
     },
     function(cb) {
 	// 2. get active loans
