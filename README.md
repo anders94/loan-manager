@@ -17,9 +17,7 @@ has "write" capability. Poloniex keys don't require special access grants.
 Make sure there are funds available in the lending wallets. On Bitfinex, the lending wallet is the Deposit 
 wallet.
 
-Next, edit the config file:
-
-```config/index.js```
+Next, edit the configuration file `config/index.js`
 
 Add the keys and secrets to the exchanges. Modify and add as necessary sections for each exchange / currency 
 you wish to lend. Be sure to closely follow the example configuration, `loan-manager` doesn't deal well with 
@@ -27,7 +25,7 @@ configuration errors.
 
 Main configuration settings:
 * loopDelayInMinutes: Time in minutes between each run through exchanges / currencies
-* msDelayBetweenAPICalls: Time in miliseconds between API calls. Exchanges usually limit the number of calls 
+* msDelayBetweenAPICalls: Time in milliseconds between API calls. Exchanges usually limit the number of calls 
   that can be made from the same IP / account.
 
 Exchange specific configuration settings:
