@@ -50,14 +50,16 @@ Connector.prototype.activeLoans = function(currency, cb) {
 
 Connector.prototype.openLoanOffers = function(currency, cb) {
     this.handle.returnOpenLoanOffers(function(err, res) {
-	if (!err && res && res[currency.toUpperCase()]) {
+	if (!err && res) {
             var offers = [];
-            for (var x in res[currency.toUpperCase()]) {
-		var offer = res[currency.toUpperCase()][x];
-		offers.push({id: offer.id, createDate: moment(offer.date).format(),
-			     currency: currency.toLowerCase(), rate: Number(offer.rate) * 365 * 100,
-			     duration: offer.duration, amount: Number(offer.amount)});
-            }
+	    if (res[currency.toUpperCase()]) {
+		for (var x in res[currency.toUpperCase()]) {
+		    var offer = res[currency.toUpperCase()][x];
+		    offers.push({id: offer.id, createDate: moment(offer.date).format(),
+				 currency: currency.toLowerCase(), rate: Number(offer.rate) * 365 * 100,
+				 duration: offer.duration, amount: Number(offer.amount)});
+		}
+	    }
             cb(null, offers);
 	}
 	else {
