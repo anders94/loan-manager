@@ -39,6 +39,8 @@ async.forever(function(cb) {
 	if (err) {
 	    console.log(err);
 	}
+	console.log('done');
+	console.log();
 	setTimeout(function() {
 	    cb();
 	}, config.loopDelayInMinutes * 60 * 1000);
