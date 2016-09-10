@@ -98,9 +98,9 @@ Connector.prototype.lendbook = function(currency, cb) {
 };
 
 Connector.prototype.availableBalance = function(currency, cb) {
-    this.handle.returnCompleteBalances(function(err, res) {
-	if (!err && res && res[currency.toUpperCase()] && res[currency.toUpperCase()].available) {
-            cb(null, res[currency.toUpperCase()].available);
+    this.handle.returnAvailableAccountBalances('lending', function(err, res) {
+	if (!err && res && res.lending && res.lending[currency.toUpperCase()]) {
+            cb(null, res.lending[currency.toUpperCase()]);
 	}
 	else {
             cb(err ? err : {message: 'response didn\'t include expected loan offers'});
