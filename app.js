@@ -53,7 +53,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
     var data = {};
     async.series([function(cb) {
 	// 1. get this exchange's usd rate for this currency
-	if (curency.toLowerCase() !== 'usd') {
+	if (currency.toLowerCase() !== 'usd') {
 	  handle.lastUSDPrice(currency, function(err, usdPrice) {
 	      data.usdPrice = usdPrice;
 	      setTimeout(function() {
