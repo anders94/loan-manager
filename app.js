@@ -113,15 +113,15 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	if (data.lendbook.offers.length > 0) {
 	    data.lendbook.offerTotal = 0;
 	    for (var x in data.lendbook.offers) {
-		var offer = data.lendbook.offers[x];
-		data.lendbook.offerTotal += offer.amount;
+		data.lendbook.offerTotal += data.lendbook.offers[x].amount;
 	    }
 	    var target = data.lendbook.offerTotal * (settings.lendbookPositioningPercentage / 100);
 	    var runningTotal = 0;
+	    data.targetRate = data.lendbook.offers[0].rate;
 	    for (var x in data.lendbook.offers) {
 		var offer = data.lendbook.offers[x];
 		runningTotal += offer.amount;
-		if (runningTotal < target) {
+		if (runningTotal <= target) {
 		    data.targetRate = offer.rate;
 		}
 	    }
@@ -205,13 +205,13 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	    if (amount * data.usdPrice > settings.maximumSizeUSD) {
 		amount = Number((settings.maximumSizeUSD / data.usdPrice).toFixed(4));
 	    }
-	    if (data.targetRate > 30) {
+	    if (data.targetRate > 25) {
 		duration = 10;
 	    }
-	    if (data.targetRate > 40) {
+	    if (data.targetRate > 30) {
 		duration = 30;
 	    }
-	    if (exchangeName === 'poloniex' && data.targetRate > 50) {
+	    if (exchangeName === 'poloniex' && data.targetRate > 35) {
 		duration = 60;
 	    }
 	    console.log('  creating offer for', amount, currency, '($'+(amount * data.usdPrice).toFixed(2)+') at',
