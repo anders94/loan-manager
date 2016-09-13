@@ -24,20 +24,22 @@ you wish to lend. Be sure to closely follow the example configuration, `loan-man
 configuration errors.
 
 Main configuration settings:
-* loopDelayInMinutes: Time in minutes between each run through exchanges / currencies
-* msDelayBetweenAPICalls: Time in milliseconds between API calls. Exchanges usually limit the number of calls 
+* *loopDelayInMinutes:* Time in minutes between each run through exchanges / currencies
+* *msDelayBetweenAPICalls:* Time in milliseconds between API calls. Exchanges usually limit the number of calls 
   that can be made from the same IP / account.
 
 Exchange specific configuration settings:
-* credentials: key and secret API settings from the exchange - these can also be passed as environment variables
-* active: this true or false turns loan management on or off for this currency
-* minimumRate: minimum percentage rate below which `loan-manager` will not create loan offers
-* minimumSizeUSD: the value in US Dollars of the minimum loan amount. Exchanges have a lower limit on the amount
+* *credentials:* key and secret API settings from the exchange - these can also be passed as environment variables
+* *active:* this true or false turns loan management on or off for this currency
+* *minimumRate:* minimum percentage rate below which `loan-manager` will not create loan offers
+* *minimumSizeUSD:* the value in US Dollars of the minimum loan amount. Exchanges have a lower limit on the amount
   of currency that can be offered in a single offer.
-* maximumSizeUSD: the value in US Dollars of the maximum loan amount. Use this if you want to limit the upper 
+* *maximumSizeUSD:* the value in US Dollars of the maximum loan amount. Use this if you want to limit the upper 
   bounds of what the `loan-manager` will offer in a single offer.
-* lendbookPositioningPercentage: `loan-manager` will traverse the offers in the lendbook and position your offers
-  this percentage rate into the book by volume.
+* *rateStrategy:* this includes a name and whatever options are necessary for the named strategy. Valid options
+  for name currently include `percentDepth` and `topOfTheBook`. Additionally, `percentDepth` also requires:
+  * lendbookPositioningPercentage: `loan-manager` will traverse the offers in the lendbook and position your offers
+    this percentage rate into the book by volume.
 * driftPercent: the percentage outside of the target rate that `loan-manager` will allow before canceling open
   orders.
 
