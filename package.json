@@ -1,0 +1,40 @@
+{
+  "name": "loan-manager",
+  "version": "0.1.0",
+  "description": "Manager bot for loaning fiat and virtual currencies on multiple exchanges.",
+  "author": "Anders Brownworth <anders-git@evantide.com.com>",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "main": "app",
+  "dependencies": {
+    "async": "~2.0.1",
+    "bitfinex": "~1.0.3",
+    "moment": "~2.14.1",
+    "poloniex.js": "~0.0.6"
+  },
+  "devDependencies": {
+  },
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anders94/loan-manager.git"
+  },
+  "keywords": [
+    "loan",
+    "bot",
+    "manager",
+    "poloniex",
+    "bitfinex",
+    "bitcoin",
+    "cryptocurrency",
+    "exchange",
+    "altcoins"
+  ],
+  "bugs": {
+    "url": "https://github.com/anders94/loan-manager/issues"
+  },
+  "engines": {
+    "node": ">=0.10"
+  }
+}
