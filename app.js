@@ -1,4 +1,5 @@
 var connectors = require('./connectors');
+var strategies = require('./strategies');
 var config = require('./config');
 var async = require('async');
 
@@ -110,28 +111,18 @@ function manage(exchangeName, handle, currency, settings, cb) {
     },
     function(cb) {
 	// 5. find desired rate
-	if (data.lendbook.offers.length > 0) {
-	    data.lendbook.offerTotal = 0;
-	    for (var x in data.lendbook.offers) {
-		data.lendbook.offerTotal += data.lendbook.offers[x].amount;
+	strategies.percentDepth(data.lendbook, settings, exchangeName, function(err, rate, duration) {
+	    if (!err) {
+		data.targetRate = rate;
+		data.duration = duration;
+		console.log('  target rate:', rate.toFixed(2)+'%');
+		console.log();
+		cb();
 	    }
-	    var target = data.lendbook.offerTotal * (settings.lendbookPositioningPercentage / 100);
-	    var runningTotal = 0;
-	    data.targetRate = data.lendbook.offers[0].rate;
-	    for (var x in data.lendbook.offers) {
-		var offer = data.lendbook.offers[x];
-		runningTotal += offer.amount;
-		if (runningTotal <= target) {
-		    data.targetRate = offer.rate;
-		}
+	    else {
+		cb(err);
 	    }
-	    console.log('  target rate:', data.targetRate.toFixed(2)+'%');
-	    console.log();
-	    cb();
-	}
-	else {
-	    cb({message: 'no offers in lendbook'});
-	}
+	});
     },
     function(cb) {
 	// 6. get open (unfilled) loan offers
@@ -201,23 +192,13 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	// 10. optionally create offer
 	if (data.availableBalance * data.usdPrice > settings.minimumSizeUSD && data.targetRate > settings.minimumRate) {
 	    var amount = data.availableBalance;
-	    var duration = 2;
 	    if (amount * data.usdPrice > settings.maximumSizeUSD) {
 		amount = Number((settings.maximumSizeUSD / data.usdPrice).toFixed(4));
 	    }
-	    if (data.targetRate > 25) {
-		duration = 10;
-	    }
-	    if (data.targetRate > 30) {
-		duration = 30;
-	    }
-	    if (exchangeName === 'poloniex' && data.targetRate > 35) {
-		duration = 60;
-	    }
 	    console.log('  creating offer for', amount, currency, '($'+(amount * data.usdPrice).toFixed(2)+') at',
-			data.targetRate.toFixed(2)+'% for', duration, 'days');
+			data.targetRate.toFixed(2)+'% for', data.duration, 'days');
 	    if (makeAndCancelOffers) {
-		handle.createLoanOffer(currency, amount, Number(data.targetRate.toFixed(2)), duration, function(err, res) {
+		handle.createLoanOffer(currency, amount, Number(data.targetRate.toFixed(2)), data.duration, function(err, res) {
 		    if (debug) {
 			console.log(res);
 		    }
