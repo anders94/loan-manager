@@ -111,7 +111,14 @@ function manage(exchangeName, handle, currency, settings, cb) {
     },
     function(cb) {
 	// 5. find desired rate
-	strategies.percentDepth(data.lendbook, settings, exchangeName, function(err, rate, duration) {
+	var strategy = strategies.topOfTheBook;
+	if (settings.rateStrategy === 'percentDepth') {
+	    strategy = strategies.percentDepth;
+	}
+	else {
+	    strategy = strategies.topOfTheBook;
+	}
+	strategy(data.lendbook, settings.rateStrategy, exchangeName, function(err, rate, duration) {
 	    if (!err) {
 		data.targetRate = rate;
 		data.duration = duration;

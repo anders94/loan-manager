@@ -21,6 +21,15 @@ module.exports.percentDepth = function(lendbook, settings, exchangeName, cb) {
     }
 };
 
+module.exports.topOfTheBook = function(lendbook, settings, exchangeName, cb) {
+    if (lendbook && lendbook.offers && lendbook.offers.length > 0) {
+	cb(null, lendbook.offers[0].rate, durationByRate(lendbook.offers[0].rate, exchangeName));
+    }
+    else {
+        cb({message: 'no offers in lendbook'});
+    }
+};
+
 function durationByRate(rate, exchangeName) {
     var duration = 2;
     if (rate > 25) {

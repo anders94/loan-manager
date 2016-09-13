@@ -13,7 +13,10 @@ module.exports = {
 		    minimumRate: 2.0,
 		    minimumSizeUSD: 50,
 		    maximumSizeUSD: 2000,
-		    lendbookPositioningPercentage: 10,
+		    rateStrategy: {
+			name: 'percentDepth',
+			lendbookPositioningPercentage: 10
+		    },
 		    driftPercent: 2
 		},
 		etc: {
@@ -21,7 +24,10 @@ module.exports = {
 		    minimumRate: 2.0,
 		    minimumSizeUSD: 50,
 		    maximumSizeUSD: 750,
-		    lendbookPositioningPercentage: 10,
+		    rateStrategy: {
+			name: 'percentDepth',
+			lendbookPositioningPercentage: 10
+		    },
 		    driftPercent: 2
 		}
 	    }
@@ -37,7 +43,10 @@ module.exports = {
 		    minimumRate: 2.0,
 		    minimumSizeUSD: 50,
 		    maximumSizeUSD: 1000,
-		    lendbookPositioningPercentage: 10,
+		    rateStrategy: {
+			name: 'percentDepth',
+			lendbookPositioningPercentage: 10
+		    },
 		    driftPercent: 2
 		},
 		eth: {
@@ -45,7 +54,10 @@ module.exports = {
 		    minimumRate: 2.0,
 		    minimumSizeUSD: 50,
 		    maximumSizeUSD: 750,
-		    lendbookPositioningPercentage: 10,
+		    rateStrategy: {
+			name: 'percentDepth',
+			lendbookPositioningPercentage: 10
+		    },
 		    driftPercent: 2
 		}
 	    }
