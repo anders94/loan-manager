@@ -40,7 +40,7 @@ Exchange specific configuration settings:
   for name currently include `percentDepth` and `topOfTheBook`. Additionally, `percentDepth` also requires:
   * lendbookPositioningPercentage: `loan-manager` will traverse the offers in the lendbook and position your offers
     this percentage rate into the book by volume.
-* driftPercent: the percentage outside of the target rate that `loan-manager` will allow before canceling open
+* *driftPercent:* the percentage outside of the target rate that `loan-manager` will allow before canceling open
   orders.
 
 Run the application:
