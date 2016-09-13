@@ -29,7 +29,7 @@ function durationByRate(rate, exchangeName) {
     if (rate > 30) {
         duration = 30;
     }
-    if (exchangeName === 'poloniex' && targetRate > 35) {
+    if (exchangeName === 'poloniex' && rate > 35) {
         duration = 60;
     }
 
