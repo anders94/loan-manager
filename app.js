@@ -115,9 +115,6 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	if (settings.rateStrategy === 'percentDepth') {
 	    strategy = strategies.percentDepth;
 	}
-	else {
-	    strategy = strategies.topOfTheBook;
-	}
 	strategy(data.lendbook, settings.rateStrategy, exchangeName, function(err, rate, duration) {
 	    if (!err) {
 		data.targetRate = rate;
