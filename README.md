@@ -18,15 +18,14 @@ automates positioning loan offers on exchanges on a periodic basis.
 Generate API keys on the exchanges you want managed. When creating Bitfinex keys, make sure "margin funding" 
 has "write" capability. Poloniex keys don't require special access grants.
 
-Make sure there are funds available in the lending wallets. On Bitfinex, the lending wallet is the Deposit 
+Make sure there are funds available in the lending wallets. On Bitfinex, the lending wallet is the Deposit
 wallet.
 
 **Edit configuration file:**
-Edit `config/index.js`
 
-Add the keys and secrets to the exchanges. Modify and add as necessary sections for each exchange / currency 
-you wish to lend. Be sure to closely follow the example configuration, `loan-manager` doesn't deal well with 
-configuration errors.
+Edit `config/index.js` adding the keys and secrets to the exchanges. Modify and add as necessary sections for
+each exchange / currency you wish to lend. Be sure to closely follow the example configuration, `loan-manager`
+doesn't deal well with configuration errors.
 
 Main configuration settings:
 * *loopDelayInMinutes:* Time in minutes between each run through exchanges / currencies
@@ -48,7 +47,7 @@ Exchange specific configuration settings:
 * *driftPercent:* the percentage outside of the target rate that `loan-manager` will allow before canceling open
   orders.
 
-Run the application:
+**Run the application:**
 
 ```node app```
 

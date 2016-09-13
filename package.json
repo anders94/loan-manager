@@ -2,7 +2,7 @@
   "name": "loan-manager",
   "version": "0.1.0",
   "description": "Manager bot for loaning fiat and virtual currencies on multiple exchanges.",
-  "author": "Anders Brownworth <anders-git@evantide.com.com>",
+  "author": "Anders Brownworth <anders-git@evantide.com>",
   "license": "MIT",
   "readmeFilename": "README.md",
   "main": "app",
