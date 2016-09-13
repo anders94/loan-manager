@@ -1,6 +1,7 @@
 var connectors = require('./connectors');
 var strategies = require('./strategies');
 var config = require('./config');
+var moment = require('moment');
 var async = require('async');
 
 var debug = false;
@@ -85,7 +86,8 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	data.rateTotal = 0;
 	async.eachSeries(data.activeLoans, function(loan, cb) {
 	    console.log('   ', loan.amount.toFixed(8), loan.currency, '($'+(loan.amount * data.usdPrice).toFixed(2)+') at',
-			loan.rate.toFixed(2)+'%', loan.createDate, 'for', loan.duration, 'days');
+			loan.rate.toFixed(2)+'%', loan.createDate, 'for', loan.duration, 'days',
+			'(expires '+moment(loan.createDate).add(loan.duration, 'days').fromNow()+')');
 	    data.loanTotal += loan.amount;
 	    data.rateTotal += loan.rate * loan.amount;
 	    cb();
@@ -143,7 +145,8 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	for (var x in data.loanOffers) {
 	    var offer = data.loanOffers[x];
 	    console.log('   ', offer.amount.toFixed(8), offer.currency, '($'+(offer.amount * data.usdPrice).toFixed(2)+') at',
-                        offer.rate.toFixed(2)+'%', offer.createDate, 'for', offer.duration, 'days');
+                        offer.rate.toFixed(2)+'%', offer.createDate, 'for', offer.duration, 'days',
+			'(expires '+moment(offer.createDate).add(offer.duration, 'days').fromNow()+')');
 	}
 	cb();
     },
@@ -225,3 +228,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	cb(err);
     });
 }
+
+moment.relativeTimeRounding(function (value) {
+    return Number(value.toFixed(2));
+});
