@@ -81,7 +81,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
     },
     function(cb) {
 	// 3. show active loans (with USD value)
-	console.log('  active loans');
+	console.log('  active loans ('+data.activeLoans.length+')');
 	data.loanTotal = 0;
 	data.rateTotal = 0;
 	async.eachSeries(data.activeLoans, function(loan, cb) {
@@ -141,26 +141,29 @@ function manage(exchangeName, handle, currency, settings, cb) {
     },
     function(cb) {
 	// 7. show open (unfilled) loan offers
-	console.log('  open loan offers');
-	for (var x in data.loanOffers) {
-	    var offer = data.loanOffers[x];
-	    console.log('   ', offer.amount.toFixed(8), offer.currency, '($'+(offer.amount * data.usdPrice).toFixed(2)+') at',
-                        offer.rate.toFixed(2)+'%', offer.createDate, 'for', offer.duration, 'days',
-			'(expires '+moment(offer.createDate).add(offer.duration, 'days').fromNow()+')');
+	if (data.loanOffers.length > 0) {
+	    console.log('  open loan offers ('+data.loanOffers.length+')');
+	    for (var x in data.loanOffers) {
+		var offer = data.loanOffers[x];
+		console.log('   ', offer.amount.toFixed(8), offer.currency, '($'+(offer.amount * data.usdPrice).toFixed(2)+') at',
+                            offer.rate.toFixed(2)+'%', offer.createDate, 'for', offer.duration, 'days',
+			    '(expires '+moment(offer.createDate).add(offer.duration, 'days').fromNow()+')');
+	    }
+	    console.log();
+	    cb();
 	}
-	cb();
+	else {
+	    cb();
+	}
     },
     function(cb) {
 	// 8. cancel open offers outside of desired rate bounds
-	var first = true;
+	var canceled = false;
 	async.eachSeries(data.loanOffers, function(offer, cb) {
 	    if (data.targetRate > settings.minimumRate && offer.rate > data.targetRate * (1 + (settings.driftPercent / 100))) {
-		if (first) {
-		    console.log();
-		    first = false;
-		}
 		console.log('    cancelling', offer.amount.toFixed(8), offer.currency, '($'+(offer.amount * data.usdPrice).toFixed(2)+') at',
                             offer.rate.toFixed(2)+'%', offer.createDate, 'for', offer.duration, 'days');
+		canceled = true;
 		if (makeAndCancelOffers) {
 		    handle.cancelLoanOffer(offer.id, function(err, res) {
 			if (debug) {
@@ -180,7 +183,9 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	    }
 	},
 	function(err) {
-	    console.log();
+	    if (canceled) {
+		console.log();
+	    }
 	    cb(err)
 	});
     },
