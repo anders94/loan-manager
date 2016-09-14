@@ -114,7 +114,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
     function(cb) {
 	// 5. find desired rate
 	var strategy = strategies.topOfTheBook;
-	if (settings.rateStrategy === 'percentDepth') {
+	if (settings.rateStrategy.name === 'percentDepth') {
 	    strategy = strategies.percentDepth;
 	}
 	strategy(data, settings.rateStrategy, exchangeName, function(err, rate, duration) {
