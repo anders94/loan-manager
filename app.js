@@ -146,8 +146,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	    for (var x in data.loanOffers) {
 		var offer = data.loanOffers[x];
 		console.log('   ', offer.amount.toFixed(8), offer.currency, '($'+(offer.amount * data.usdPrice).toFixed(2)+') at',
-                            offer.rate.toFixed(2)+'%', offer.createDate, 'for', offer.duration, 'days',
-			    '(expires '+moment(offer.createDate).add(offer.duration, 'days').fromNow()+')');
+                            offer.rate.toFixed(2)+'%', offer.createDate, 'for', offer.duration, 'days');
 	    }
 	    console.log();
 	    cb();
