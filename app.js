@@ -62,7 +62,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	      data.usdPrice = usdPrice;
 	      setTimeout(function() {
 		  cb(err);
-	      }, config.msDelayBetweenAPICalls);
+	      }, config.exchanges[exchangeName].msDelayBetweenAPICalls);
 	  });
 	}
 	else {
@@ -76,7 +76,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	    data.activeLoans = activeLoans;
 	    setTimeout(function() {
 		cb(err);
-	    }, config.msDelayBetweenAPICalls);
+	    }, config.exchanges[exchangeName].msDelayBetweenAPICalls);
 	});
     },
     function(cb) {
@@ -108,7 +108,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
             data.lendbook = lendbook;
             setTimeout(function() {
                 cb(err);
-            }, config.msDelayBetweenAPICalls);
+            }, config.exchanges[exchangeName].msDelayBetweenAPICalls);
         });
     },
     function(cb) {
@@ -136,7 +136,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
             data.loanOffers = loanOffers;
             setTimeout(function() {
                 cb(err);
-            }, config.msDelayBetweenAPICalls);
+            }, config.exchanges[exchangeName].msDelayBetweenAPICalls);
         });
     },
     function(cb) {
@@ -170,7 +170,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
 			}
 			setTimeout(function() {
 			    cb(err);
-			}, config.msDelayBetweenAPICalls);
+			}, config.exchanges[exchangeName].msDelayBetweenAPICalls);
 		    });
 		}
 		else {
@@ -196,7 +196,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	    console.log();
             setTimeout(function() {
                 cb(err);
-            }, config.msDelayBetweenAPICalls);
+            }, config.exchanges[exchangeName].msDelayBetweenAPICalls);
         });
     },
     function(cb) {
@@ -215,7 +215,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
 		    }
 		    setTimeout(function() {
 			cb(err);
-		    }, config.msDelayBetweenAPICalls);
+		    }, config.exchanges[exchangeName].msDelayBetweenAPICalls);
 		});
 	    }
 	    else {

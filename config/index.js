@@ -1,8 +1,8 @@
 module.exports = {
     loopDelayInMinutes: 5,
-    msDelayBetweenAPICalls: 1000,
     exchanges: {
 	'bitfinex': {
+	    msDelayBetweenAPICalls: 1000,
 	    credentials: {
 		key: process.env.BITFINEX_KEY || 'BITFINEX-KEY-HERE',
 		secret: process.env.BITFINEX_SECRET || 'BITFINEX-SECRET-HERE'
@@ -33,6 +33,7 @@ module.exports = {
 	    }
 	},
 	poloniex: {
+	    msDelayBetweenAPICalls: 100,
 	    credentials: {
 		key: process.env.POLONIEX_KEY || 'POLONIEX-KEY-HERE',
 		secret: process.env.POLONIEX_SECRET || 'POLONIEX-SECRET-HERE'
