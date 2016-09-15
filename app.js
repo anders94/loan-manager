@@ -97,7 +97,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
         function(err) {
 	    if (data.loanTotal > 0) {
 		console.log();
-		console.log('    total:', data.loanTotal.toFixed(8), currency, '($'+(data.loanTotal * data.usdPrice).toFixed(2)+')',
+		console.log('      total:', data.loanTotal.toFixed(8), currency, '($'+(data.loanTotal * data.usdPrice).toFixed(2)+')',
 			    'at', (data.rateTotal / data.loanTotal).toFixed(2)+'%');
 	    }
 	    console.log();
