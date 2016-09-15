@@ -60,7 +60,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	if (currency.toLowerCase() !== 'usd') {
 	  handle.lastUSDPrice(currency, function(err, usdPrice) {
 	      data.usdPrice = usdPrice;
-	      console.log('  usd rate: $'+usdPrice.toFixed(2));
+	      console.log('  usd rate: $'+Number(usdPrice).toFixed(2));
 	      console.log();
 	      setTimeout(function() {
 		  cb(err);
