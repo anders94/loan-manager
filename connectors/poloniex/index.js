@@ -7,24 +7,35 @@ module.exports = Connector = function(creds) {
 };
 
 Connector.prototype.lastUSDPrice = function(currency, cb) {
-    var last;
     this.handle.returnTicker(function(err, res) {
 	if (!err && res) {
+	    var usd;
+	    var btc;
+	    var usdBtc;
 	    async.forEachOf(res, function(_detail, _pair, cb) {
 		if (_pair === 'USDT_'+currency.toUpperCase()) {
-		    last = _detail.last;
+		    usd = _detail.last;
+		}
+		else if (_pair === 'USDT_BTC') {
+		    usdBtc = _detail.last;
+		}
+		else if (_pair === 'BTC_'+currency.toUpperCase()) {
+		    btc = _detail.last;
 		}
 		cb();
 	    },
 	    function(err) {
+		var last = usd;
+		if (!usd && btc && usdBtc) {
+		    last = btc * usdBtc;
+		}
 		cb(null, last);
 	    });
 	}
 	else {
-	    cb(err !== false ? err : {message: 'response didn\'t include a last_price'});
+	    cb(err !== false ? err : {message: 'response didn\'t include a last parameter'});
 	}
     });
-
 };
 
 Connector.prototype.activeLoans = function(currency, cb) {
