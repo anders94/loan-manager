@@ -26,10 +26,10 @@ Connector.prototype.lastUSDPrice = function(currency, cb) {
 	    },
 	    function(err) {
 		var last = usd;
-		if (!usd && btc && usdBtc) {
+		if (!last && btc && usdBtc) {
 		    last = btc * usdBtc;
 		}
-		cb(null, last);
+		cb(last ? null : {message: 'currency not found'}, last);
 	    });
 	}
 	else {
