@@ -100,7 +100,8 @@ Connector.prototype.availableBalance = function(currency, cb) {
 };
 
 Connector.prototype.createLoanOffer = function(currency, amount, rate, duration, cb) {
-    this.handle.new_offer(currency.toUpperCase(), amount.toFixed(8), rate.toFixed(6), duration, 'lend', null, function(err, res) {
+    this.handle.new_offer(currency.toUpperCase(), amount.toFixed(8), rate.toFixed(6),
+			  duration, 'lend', null, function(err, res) {
         cb(err, res);
     });
 };
@@ -108,5 +109,19 @@ Connector.prototype.createLoanOffer = function(currency, amount, rate, duration,
 Connector.prototype.cancelLoanOffer = function(id, cb) {
     this.handle.cancel_offer(id, function(err, res) {
         cb(err, res);
+    });
+};
+
+Connector.prototype.alterLoanOffer = function(offer, cb) {
+    this.handle.cancel_offer(offer.id, function(err, res) {
+	if (!err) {
+	    this.handle.new_offer(offer.currency.toUpperCase(), offer.amount.toFixed(8), offer.rate.toFixed(6),
+				  offer.duration, 'lend', null, function(err, res) {
+		cb(err, res);
+	    });
+	}
+	else {
+	    cb(err, res);
+	}
     });
 };

@@ -131,3 +131,18 @@ Connector.prototype.cancelLoanOffer = function(id, cb) {
 	cb(err, res);
     });
 };
+
+Connector.prototype.alterLoanOffer = function(offer, cb) {
+    this.handle.cancelLoanOffer(offer.id, function(err, res) {
+	if (err) {
+	    var dailyRate = offer.rate / 365 / 100;
+	    this.handle.createLoanOffer(offer.currency.toUpperCase(), offer.amount,
+					offer.duration, 0, dailyRate, function(err, res) {
+	        cb(err, res);
+	    });
+	}
+	else {
+	    cb(err, res);
+	}
+    });
+};

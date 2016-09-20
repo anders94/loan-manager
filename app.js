@@ -115,11 +115,11 @@ function manage(exchangeName, handle, currency, settings, cb) {
     },
     function(cb) {
 	// 5. find desired rate
-	var strategy = strategies.topOfTheBook;
-	if (settings.rateStrategy.name === 'percentDepth') {
-	    strategy = strategies.percentDepth;
+	var strategy = strategies.createLoan.topOfTheBook;
+	if (settings.rateCreationStrategy.name === 'percentDepth') {
+	    strategy = strategies.createLoan.percentDepth;
 	}
-	strategy(data, settings.rateStrategy, exchangeName, function(err, rate, duration) {
+	strategy(data, settings, exchangeName, function(err, rate, duration) {
 	    if (!err) {
 		data.targetRate = rate;
 		data.duration = duration;
@@ -158,33 +158,59 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	}
     },
     function(cb) {
-	// 8. cancel open offers outside of desired rate bounds
-	var canceled = false;
+	// 8. test all open offers to see if they should be updated or canceled
+	var activity = false;
 	async.eachSeries(data.loanOffers, function(offer, cb) {
-	    if (data.targetRate > settings.minimumRate && offer.rate > data.targetRate * (1 + (settings.driftPercent / 100))) {
-		console.log('    cancelling', offer.amount.toFixed(8), offer.currency, '($'+(offer.amount * data.usdPrice).toFixed(2)+') at',
-                            offer.rate.toFixed(2)+'%', offer.createDate, 'for', offer.duration, 'days');
-		canceled = true;
-		if (makeAndCancelOffers) {
-		    handle.cancelLoanOffer(offer.id, function(err, res) {
-			if (debug) {
-			    console.log(res);
-			}
-			setTimeout(function() {
-			    cb(err);
-			}, config.exchanges[exchangeName].msDelayBetweenAPICalls);
-		    });
+	    var strategy = strategies.updateLoan.outOfRange;
+            if (settings.rateUpdateStrategy.name === 'lowerRateWithTime') {
+		strategy = strategies.updateLoan.lowerRateWithTime;
+            }
+            strategy(offer, data, settings, exchangeName, function(err, offer) {
+		if (offer.action === 'cancel') {
+		    // cancel this offer
+		    if (makeAndCancelOffers) {
+			activity = true;
+			console.log('   cancelling', offer.amount.toFixed(8), offer.currency, '($'+(offer.amount * data.usdPrice).toFixed(2)+') at',
+				    offer.rate.toFixed(2)+'%', offer.createDate, 'for', offer.duration, 'days');
+			handle.cancelLoanOffer(offer.id, function(err, res) {
+			    if (debug) {
+				console.log(res);
+			    }
+			    setTimeout(function() {
+				cb(err);
+			    }, config.exchanges[exchangeName].msDelayBetweenAPICalls);
+			});
+		    }
+		    else {
+			cb();
+		    }
+		}
+		else if (offer.action === 'update') {
+		    // update this offer
+		    if (makeAndCancelOffers) {
+			activity = true;
+			console.log('   updating', offer.amount.toFixed(8), offer.currency, '($'+(offer.amount * data.usdPrice).toFixed(2)+') at',
+				    offer.rate.toFixed(2)+'%', offer.createDate, 'for', offer.duration, 'days');
+			handle.updateLoanOffer(offer, function(err, res) { // TODO: make this an update not a cancel!
+			    if (debug) {
+				console.log(res);
+			    }
+			    setTimeout(function() {
+				cb(err);
+			    }, config.exchanges[exchangeName].msDelayBetweenAPICalls);
+			});
+		    }
+		    else {
+			cb();
+		    }
 		}
 		else {
 		    cb();
 		}
-	    }
-	    else {
-		cb();
-	    }
+	    });
 	},
 	function(err) {
-	    if (canceled) {
+	    if (activity) {
 		console.log();
 	    }
 	    cb(err)
