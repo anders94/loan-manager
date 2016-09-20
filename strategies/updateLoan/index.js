@@ -12,7 +12,7 @@ module.exports.lowerRateWithTime = function(offer, data, settings, exchangeName,
     var age = moment().diff(moment(offer.createDate), 'days', true);
     var newRate = data.targetRate - (age * settings.rateUpdateStrategy.percentPerDay);
 
-    if (newRate < data.targetRate - 0.01) {
+    if (newRate < offer.rate && newRate < data.targetRate - 0.01) {
 	if (newRate > settings.minimumRate) {
 	    // adjust rate down
 	    //console.log('moving rate from', offer.rate, 'to', newRate);
