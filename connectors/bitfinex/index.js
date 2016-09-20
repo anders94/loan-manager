@@ -112,11 +112,12 @@ Connector.prototype.cancelLoanOffer = function(id, cb) {
     });
 };
 
-Connector.prototype.alterLoanOffer = function(offer, cb) {
-    this.handle.cancel_offer(offer.id, function(err, res) {
+Connector.prototype.updateLoanOffer = function(offer, cb) {
+    var handle = this.handle;
+    handle.cancel_offer(offer.id, function(err, res) {
 	if (!err) {
-	    this.handle.new_offer(offer.currency.toUpperCase(), offer.amount.toFixed(8), offer.rate.toFixed(6),
-				  offer.duration, 'lend', null, function(err, res) {
+	    handle.new_offer(offer.currency.toUpperCase(), offer.amount.toFixed(8), offer.rate.toFixed(6),
+			     offer.duration, 'lend', null, function(err, res) {
 		cb(err, res);
 	    });
 	}
