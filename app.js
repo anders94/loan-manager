@@ -8,6 +8,8 @@ var debug = false;
 var makeAndCancelOffers = true;
 
 async.forever(function(cb) {
+    var usdTotal = 0;
+    var rateTotal = 0;
     console.log('-----------------------------------');
     console.log(new Date());
     console.log('-----------------------------------');
@@ -23,7 +25,13 @@ async.forever(function(cb) {
 		    handle = new connectors.poloniex(config.exchanges.poloniex.credentials);
 		}
 		if (handle) {
-		    manage(exchangeName, handle, currency, settings, cb);
+		    manage(exchangeName, handle, currency, settings, function(err, data) {
+			var usd = data.loanTotal * data.usdPrice;
+			var rate = data.rateTotal / data.loanTotal;
+			usdTotal += usd;
+			rateTotal += usd * rate;
+			cb(err);
+		    });
 		}
 		else {
 		    cb({message: 'exchange '+exchangeName+' not found'});
@@ -41,6 +49,10 @@ async.forever(function(cb) {
 	if (err) {
 	    console.log(err);
 	}
+	console.log();
+	console.log('summary');
+	console.log('  grand total: $'+toUsd(usdTotal), 'loaned at', (rateTotal / usdTotal).toFixed(2)+'%');
+	console.log();
 	console.log('done');
 	console.log();
 	setTimeout(function() {
@@ -60,7 +72,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	if (currency.toLowerCase() !== 'usd') {
 	  handle.lastUSDPrice(currency, function(err, usdPrice) {
 	      data.usdPrice = usdPrice;
-	      console.log('  usd rate: $'+Number(usdPrice).toFixed(2));
+	      console.log('  usd rate: $'+toUsd(usdPrice));
 	      console.log();
 	      setTimeout(function() {
 		  cb(err);
@@ -87,7 +99,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	data.loanTotal = 0;
 	data.rateTotal = 0;
 	async.eachSeries(data.activeLoans, function(loan, cb) {
-	    console.log('   ', loan.amount.toFixed(8), loan.currency, '($'+(loan.amount * data.usdPrice).toFixed(2)+') at',
+	    console.log('   ', loan.amount.toFixed(8), loan.currency, '($'+toUsd(loan.amount * data.usdPrice)+') at',
 			loan.rate.toFixed(2)+'%', loan.createDate, 'for', loan.duration, 'days',
 			'(expires '+moment(loan.createDate).add(loan.duration, 'days').fromNow()+')');
 	    data.loanTotal += loan.amount;
@@ -97,7 +109,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
         function(err) {
 	    if (data.loanTotal > 0) {
 		console.log();
-		console.log('      total:', data.loanTotal.toFixed(8), currency, '($'+(data.loanTotal * data.usdPrice).toFixed(2)+')',
+		console.log('      total:', data.loanTotal.toFixed(8), currency, '($'+toUsd(data.loanTotal * data.usdPrice)+')',
 			    'at', (data.rateTotal / data.loanTotal).toFixed(2)+'%');
 	    }
 	    console.log();
@@ -147,7 +159,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	    console.log('  open loan offers ('+data.loanOffers.length+')');
 	    for (var x in data.loanOffers) {
 		var offer = data.loanOffers[x];
-		console.log('   ', offer.amount.toFixed(8), offer.currency, '($'+(offer.amount * data.usdPrice).toFixed(2)+') at',
+		console.log('   ', offer.amount.toFixed(8), offer.currency, '($'+toUsd(offer.amount * data.usdPrice)+') at',
                             offer.rate.toFixed(2)+'%', offer.createDate, 'for', offer.duration, 'days');
 	    }
 	    console.log();
@@ -170,7 +182,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
 		    // cancel this offer
 		    if (makeAndCancelOffers) {
 			activity = true;
-			console.log('   cancelling', offer.amount.toFixed(8), offer.currency, '($'+(offer.amount * data.usdPrice).toFixed(2)+') at',
+			console.log('   cancelling', offer.amount.toFixed(8), offer.currency, '($'+toUsd(offer.amount * data.usdPrice)+') at',
 				    offer.rate.toFixed(2)+'%', offer.createDate, 'for', offer.duration, 'days');
 			handle.cancelLoanOffer(offer.id, function(err, res) {
 			    if (debug) {
@@ -189,7 +201,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
 		    // update this offer
 		    if (makeAndCancelOffers) {
 			activity = true;
-			console.log('   updating', offer.amount.toFixed(8), offer.currency, '($'+(offer.amount * data.usdPrice).toFixed(2)+') at',
+			console.log('   updating', offer.amount.toFixed(8), offer.currency, '($'+toUsd(offer.amount * data.usdPrice)+') at',
 				    offer.rate.toFixed(2)+'%', offer.createDate, 'for', offer.duration, 'days');
 			handle.updateLoanOffer(offer, function(err, res) { // TODO: make this an update not a cancel!
 			    if (debug) {
@@ -220,7 +232,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	// 9. get available balance for this currency
 	handle.availableBalance(currency, function(err, availableBalance) {
             data.availableBalance = availableBalance;
-	    console.log('  available balance:', data.availableBalance, currency, '($'+(data.availableBalance * data.usdPrice).toFixed(2)+')');
+	    console.log('  available balance:', data.availableBalance, currency, '($'+toUsd(data.availableBalance * data.usdPrice)+')');
 	    console.log();
             setTimeout(function() {
                 cb(err);
@@ -234,7 +246,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	    if (amount * data.usdPrice > settings.maximumSizeUSD) {
 		amount = Number((settings.maximumSizeUSD / data.usdPrice).toFixed(4));
 	    }
-	    console.log('  creating offer for', amount, currency, '($'+(amount * data.usdPrice).toFixed(2)+') at',
+	    console.log('  creating offer for', amount, currency, '($'+toUsd(amount * data.usdPrice)+') at',
 			data.targetRate.toFixed(2)+'% for', data.duration, 'days');
 	    if (makeAndCancelOffers) {
 		handle.createLoanOffer(currency, amount, Number(data.targetRate.toFixed(2)), data.duration, function(err, res) {
@@ -257,10 +269,18 @@ function manage(exchangeName, handle, currency, settings, cb) {
     }],
     function(err) {
 	console.log();
-	cb(err);
+	cb(err, data);
     });
 }
 
 moment.relativeTimeRounding(function (value) {
     return Number(value.toFixed(2));
 });
+
+function toUsd(x) {
+    return numberWithCommas(Number(x).toFixed(2));
+}
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
