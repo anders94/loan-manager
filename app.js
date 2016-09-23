@@ -27,7 +27,7 @@ async.forever(function(cb) {
 		if (handle) {
 		    manage(exchangeName, handle, currency, settings, function(err, data) {
 			var usd = data.loanTotal * data.usdPrice;
-			var rate = data.rateTotal / data.loanTotal;
+			var rate = data.rateTotal / (data.loanTotal !== 0 ? data.loanTotal : 1); // covers divide by zero
 			usdTotal += usd;
 			rateTotal += usd * rate;
 			cb(err);
