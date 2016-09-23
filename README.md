@@ -40,18 +40,18 @@ Exchange specific configuration settings:
   of currency that can be offered in a single offer.
 * *maximumSizeUSD:* the value in US Dollars of the maximum loan amount. Use this if you want to limit the upper 
   bounds of what the `loan-manager` will offer in a single offer.
-* *rateCreationStrategy:* names and configures the strategy to be used when creating loans. Valid options include
+* *rateCreationStrategy:* names and configures the strategy to be used when creating loans. Valid names include
   `topOfTheBook` and `percentDepth`.
-  * *topOfTheBook:* Positions offers at the top of the book. no other parameters are necessary.
-  * *percentDepth:* Requires 'lendbookPositioningPercentage' which describes how deep into the book to position the
-    offer. For example, `10` would position the offers at whatever rate is 10% deep into the book.
-* *rateUpdateStrategy:* names and configures the strategy to be used when evaluating open loan offers. Valid options
+  * *topOfTheBook:* Positions offers at the same rate as the top offer in the book. No other parameters are necessary.
+  * *percentDepth:* Requires `lendbookPositioningPercentage` which describes how deep into the book to position the
+    offer. For example, `10` would position the offers at whatever rate is 10% into the book by volume.
+* *rateUpdateStrategy:* names and configures the strategy to be used when evaluating open loan offers. Valid names
   include `outOfRange` and `lowerRateWithTime`.
   * *outOfRange:* Requires `driftPercent`. If an offer is more than `driftPercent` above the target rate, cancel the
     offer.
   * *lowerRateWithTime:* Requires `lowerAfterMinutes` and `lowerByPercent`. If an offer is older than `lowerAfterMinutes`,
-    lower the offer's rate by `lowerByPercent`. For example, if the offer is at 5.85% and is older than the limit
-    and `lowerByPercent` is set to 10, the offer will be lowered by 10% to 5.256%.
+    lower the offer's rate by `lowerByPercent`. For example, if `lowerByPercent` is set to 10, an offer at 5.85% will
+    be lowered by 10% to 5.256%.
 
 **Run the application:**
 
