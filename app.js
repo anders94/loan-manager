@@ -178,7 +178,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
 		strategy = strategies.updateLoan.lowerRateWithTime;
             }
             strategy(offer, data, settings, exchangeName, function(err, offer) {
-		if (offer.action === 'cancel') {
+		if (offer.action === 'cancel' || offer.rate < settings.minimumRate) {
 		    // cancel this offer
 		    if (makeAndCancelOffers) {
 			activity = true;

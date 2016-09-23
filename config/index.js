@@ -19,7 +19,8 @@ module.exports = {
 		    },
 		    rateUpdateStrategy: {
 			name: 'lowerRateWithTime',
-			percentPerDay: 5
+			lowerAfterMinutes: 30,
+			lowerByPercent: 5
 		    }
 		},
 		etc: {
@@ -55,8 +56,9 @@ module.exports = {
 			lendbookPositioningPercentage: 10
 		    },
 		    rateUpdateStrategy: {
-			name: 'outOfRange',
-			driftPercent: 2
+			name: 'lowerRateWithTime',
+			lowerAfterMinutes: 30,
+			lowerByPercent: 5
 		    }
 		},
 		eth: {

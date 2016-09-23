@@ -40,12 +40,18 @@ Exchange specific configuration settings:
   of currency that can be offered in a single offer.
 * *maximumSizeUSD:* the value in US Dollars of the maximum loan amount. Use this if you want to limit the upper 
   bounds of what the `loan-manager` will offer in a single offer.
-* *rateStrategy:* this includes a name and whatever options are necessary for the named strategy. Valid options
-  for name currently include `percentDepth` and `topOfTheBook`. Additionally, `percentDepth` also requires:
-  * lendbookPositioningPercentage: `loan-manager` will traverse the offers in the lendbook and position your offers
-    this percentage rate into the book by volume.
-* *driftPercent:* the percentage outside of the target rate that `loan-manager` will allow before canceling open
-  orders.
+* *rateCreationStrategy:* names and configures the strategy to be used when creating loans. Valid options include
+  `topOfTheBook` and `percentDepth`.
+  * *topOfTheBook:* Positions offers at the top of the book. no other parameters are necessary.
+  * *percentDepth:* Requires 'lendbookPositioningPercentage' which describes how deep into the book to position the
+    offer. For example, `10` would position the offers at whatever rate is 10% deep into the book.
+* *rateUpdateStrategy:* names and configures the strategy to be used when evaluating open loan offers. Valid options
+  include `outOfRange` and `lowerRateWithTime`.
+  * *outOfRange:* Requires `driftPercent`. If an offer is more than `driftPercent` above the target rate, cancel the
+    offer.
+  * *lowerRateWithTime:* Requires `lowerAfterMinutes` and `lowerByPercent`. If an offer is older than `lowerAfterMinutes`,
+    lower the offer's rate by `lowerByPercent`. For example, if the offer is at 5.85% and is older than the limit
+    and `lowerByPercent` is set to 10, the offer will be lowered by 10% to 5.256%.
 
 **Run the application:**
 
@@ -110,7 +116,7 @@ poloniex btc
     0.52476103 btc ($323.40) at 25.18% 2016-09-01T13:49:26-04:00 for 60 days (expires in 1.59 months)
     0.34513618 btc ($212.70) at 24.24% 2016-08-24T21:13:07-04:00 for 60 days (expires in 1.34 months)
 
-    total: 2.54723493 btc ($1569.81) at 24.23%
+    total: 2.54723493 btc ($1,569.81) at 24.23%
 
   target rate: 24.53%
 
@@ -119,6 +125,9 @@ poloniex btc
   available balance: 0 btc ($0.00)
 
   not creating a new offer
+
+summary
+  grand total: $2,798.48 loaned at 31.26%
 
 done
 ```
