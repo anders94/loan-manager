@@ -1,6 +1,6 @@
 module.exports.topOfTheBook = function(data, settings, exchangeName, cb) {
     if (data && data.lendbook && data.lendbook.offers && data.lendbook.offers.length > 0) {
-	cb(null, data.lendbook.offers[0].rate, durationByRate(data.lendbook.offers[0].rate, exchangeName));
+	cb(null, data.lendbook.offers[0].rate);
     }
     else {
         cb({message: 'no offers in lendbook'});
@@ -23,24 +23,9 @@ module.exports.percentDepth = function(data, settings, exchangeName, cb) {
 		targetRate = offer.rate;
             }
         }
-	cb(null, targetRate, durationByRate(targetRate, exchangeName));
+	cb(null, targetRate);
     }
     else {
         cb({message: 'no offers in lendbook'});
     }
 };
-
-function durationByRate(rate, exchangeName) {
-    var duration = 2;
-    if (rate > 25) {
-        duration = 10;
-    }
-    if (rate > 30) {
-        duration = 30;
-    }
-    if (exchangeName === 'poloniex' && rate > 35) {
-        duration = 60;
-    }
-
-    return duration;
-}

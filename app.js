@@ -136,10 +136,9 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	if (settings.rateCreationStrategy.name === 'percentDepth') {
 	    strategy = strategies.createLoan.percentDepth;
 	}
-	strategy(data, settings, exchangeName, function(err, rate, duration) {
+	strategy(data, settings, exchangeName, function(err, rate) {
 	    if (!err) {
 		data.targetRate = rate;
-		data.duration = duration;
 		console.log('  target rate:', rate.toFixed(2)+'%');
 		console.log();
 		cb();
@@ -150,7 +149,13 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	});
     },
     function(cb) {
-	// 6. get open (unfilled) loan offers
+	// 6. find duration
+	var strategy = strategies.loanDuration.rateBased;
+	data.duration = strategy(data, settings, exchangeName);
+	cb();
+    },
+    function(cb) {
+	// 7. get open (unfilled) loan offers
 	handle.openLoanOffers(currency, function(err, loanOffers) {
             data.loanOffers = loanOffers;
             setTimeout(function() {
@@ -159,7 +164,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
         });
     },
     function(cb) {
-	// 7. show open (unfilled) loan offers
+	// 8. show open (unfilled) loan offers
 	if (data.loanOffers.length > 0) {
 	    console.log('  open loan offers ('+data.loanOffers.length+')');
 	    for (var x in data.loanOffers) {
@@ -175,7 +180,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	}
     },
     function(cb) {
-	// 8. test all open offers to see if they should be updated or canceled
+	// 9. test all open offers to see if they should be updated or canceled
 	var activity = false;
 	async.eachSeries(data.loanOffers, function(offer, cb) {
 	    var strategy = strategies.updateLoan.outOfRange;
@@ -234,7 +239,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	});
     },
     function(cb) {
-	// 9. get available balance for this currency
+	// 10. get available balance for this currency
 	handle.availableBalance(currency, function(err, availableBalance) {
             data.availableBalance = availableBalance;
 	    console.log('  available balance:', data.availableBalance, currency, '($'+toUsd(data.availableBalance * data.usdPrice)+')');
@@ -245,7 +250,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
         });
     },
     function(cb) {
-	// 10. optionally create offer
+	// 11. optionally create offer
 	if (data.availableBalance * data.usdPrice > settings.minimumSizeUSD && data.targetRate > settings.minimumRate) {
 	    var amount = data.availableBalance;
 	    if (amount * data.usdPrice > settings.maximumSizeUSD) {
