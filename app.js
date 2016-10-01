@@ -209,7 +209,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
 		}
 		else if (offer.action === 'update') {
 		    // update this offer
-		    if (makeAndCancelOffers) {
+		    if (makeAndCancelOffers && (offer.amount * data.usdPrice) >= settings.minimumSizeUSD) {
 			activity = true;
 			console.log('    updating', offer.amount.toFixed(8), offer.currency, '($'+toUsd(offer.amount * data.usdPrice)+') at',
 				    offer.rate.toFixed(2)+'%', offer.createDate, 'for', offer.duration, 'days');
