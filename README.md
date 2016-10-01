@@ -7,7 +7,7 @@ on each exchange creating and updating loan offers based on the selected and con
 * [Bitfinex](https://www.bitfinex.com/)
 * [Poloniex](https://www.poloniex.com/)
 
-# Support the Project
+## Support the Project
 * BTC: `1FwVYgQCN5oDvbZCQrE3KwgkBECJ93kF5x`
 
 ## Setup
@@ -28,9 +28,9 @@ wallet".
 
 **Edit the configuration file:**
 
-Edit `config/index.js` adding the keys and secrets to the exchanges. Modify and add as necessary sections for
-each exchange / currency you wish to lend. Be sure to closely follow the example configuration; `loan-manager`
-doesn't deal well with configuration errors.
+Edit `config/index.js` adding the keys and secrets to the exchange sections. Modify and add sections as 
+necessary for each exchange / currency you wish to lend. Be sure to closely follow the example configuration;
+`loan-manager` doesn't deal well with configuration errors.
 
 Main configuration settings:
 * *loopDelayInMinutes:* Time in minutes between each run of the logic
