@@ -211,7 +211,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
 		    // update this offer
 		    if (makeAndCancelOffers) {
 			activity = true;
-			console.log('   updating', offer.amount.toFixed(8), offer.currency, '($'+toUsd(offer.amount * data.usdPrice)+') at',
+			console.log('    updating', offer.amount.toFixed(8), offer.currency, '($'+toUsd(offer.amount * data.usdPrice)+') at',
 				    offer.rate.toFixed(2)+'%', offer.createDate, 'for', offer.duration, 'days');
 			handle.updateLoanOffer(offer, function(err, res) { // TODO: make this an update not a cancel!
 			    if (debug) {
