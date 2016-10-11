@@ -251,7 +251,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
     },
     function(cb) {
 	// 11. optionally create offer
-	if (data.availableBalance * data.usdPrice > settings.minimumSizeUSD && data.targetRate > settings.minimumRate) {
+	if (data.availableBalance * data.usdPrice >= settings.minimumSizeUSD && data.targetRate >= settings.minimumRate) {
 	    var amount = data.availableBalance;
 	    if (amount * data.usdPrice > settings.maximumSizeUSD) {
 		amount = Number((settings.maximumSizeUSD / data.usdPrice).toFixed(4));
@@ -274,10 +274,10 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	}
 	else {
 	    console.log('  not creating a new offer');
-	    if (data.targetRate > settings.minimumRate) {
+	    if (data.targetRate < settings.minimumRate) {
 		console.log('    target rate of', data.targetRate+'% is less than minimum rate of', settings.minimumRate+'%');
 	    }
-	    else if (data.availableBalance * data.usdPrice > settings.minimumSizeUSD) {
+	    else if (data.availableBalance * data.usdPrice < settings.minimumSizeUSD) {
 		console.log('    value of', data.availableBalance, currency, '($'+toUsd(data.availableBalance * data.usdPrice)+')',
 			    'is less than minimum size of $'+settings.minimumSizeUSD);
 	    }
