@@ -277,9 +277,9 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	    if (data.targetRate > settings.minimumRate) {
 		console.log('    target rate of', data.targetRate+'% is less than minimum rate of', settings.minimumRate+'%');
 	    }
-	    else {
+	    else if (data.availableBalance * data.usdPrice > settings.minimumSizeUSD) {
 		console.log('    value of', data.availableBalance, currency, '($'+toUsd(data.availableBalance * data.usdPrice)+')',
-			    'is less than minimum size of $'+settings.minimumRate);
+			    'is less than minimum size of $'+settings.minimumSizeUSD);
 	    }
 	    cb();
 	}
