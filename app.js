@@ -274,6 +274,13 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	}
 	else {
 	    console.log('  not creating a new offer');
+	    if (data.targetRate > settings.minimumRate) {
+		console.log('    target rate of', data.targetRate+'% is less than minimum rate of', settings.minimumRate+'%');
+	    }
+	    else {
+		console.log('    value of', data.availableBalance, currency, '($'+toUsd(data.availableBalance * data.usdPrice)+')',
+			    'is less than minimum size of $'+settings.minimumRate);
+	    }
 	    cb();
 	}
     }],
