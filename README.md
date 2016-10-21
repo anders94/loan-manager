@@ -140,3 +140,16 @@ summary
 
 done
 ```
+
+## FAQ
+
+*Q: Because interest is compounded daily, isn't multiplying the daily rate by 365 to get the yearly rate incorrect?*
+
+A: Yes. More correctly we would raise the daily rate plus one to the 365th power but as you don't ever hold a loan
+   for an entire year, we more closely approximate the actual rate by simply multiplying the daily rate by 365.
+
+   | Daily Rate | Daily * 365 | ((Daily+1)^365)-1 |
+   |-----------:|------------:|------------------:|
+   |      0.01% |       3.65% |             3.72% |
+   |      0.05% |      18.25% |            20.02% |
+   |      0.10% |      36.50% |            44.03% |
