@@ -1,4 +1,8 @@
 module.exports = {
+    debug: false,
+    makeAndCancelOffers: true,
+    apiServer: false,
+    apiPort: 8080,
     loopDelayInMinutes: 5,
     exchanges: {
 	'bitfinex': {

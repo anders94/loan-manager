@@ -5,16 +5,16 @@ var restify = require('restify');
 var moment = require('moment');
 var async = require('async');
 
-var debug = false;
-var makeAndCancelOffers = true;
-
 var stats = {};
-var server = restify.createServer();
-server.get('/stats.json', function(req, res, next) {
-	res.send(stats);
-	next();
-    });
-server.listen(8080);
+
+if (config.apiServer) {
+    var server = restify.createServer();
+    server.get('/stats.json', function(req, res, next) {
+	    res.send(stats);
+	    next();
+	});
+    server.listen(config.apiPort);
+}
 
 async.forever(function(cb) {
     var usdTotal = 0;
@@ -207,12 +207,12 @@ function manage(exchangeName, handle, currency, settings, cb) {
             strategy(offer, data, settings, exchangeName, function(err, offer) {
 		if (offer.action === 'cancel' || offer.rate < settings.minimumRate) {
 		    // cancel this offer
-		    if (makeAndCancelOffers) {
+		    if (config.makeAndCancelOffers) {
 			activity = true;
 			console.log('   cancelling', offer.amount.toFixed(8), offer.currency, '($'+toUsd(offer.amount * data.usdPrice)+') at',
 				    offer.rate.toFixed(2)+'%', offer.createDate, 'for', offer.duration, 'days');
 			handle.cancelLoanOffer(offer.id, function(err, res) {
-			    if (debug) {
+			    if (config.debug) {
 				console.log(res);
 			    }
 			    setTimeout(function() {
@@ -226,12 +226,12 @@ function manage(exchangeName, handle, currency, settings, cb) {
 		}
 		else if (offer.action === 'update') {
 		    // update this offer
-		    if (makeAndCancelOffers && (offer.amount * data.usdPrice) >= settings.minimumSizeUSD) {
+		    if (config.makeAndCancelOffers && (offer.amount * data.usdPrice) >= settings.minimumSizeUSD) {
 			activity = true;
 			console.log('    updating', offer.amount.toFixed(8), offer.currency, '($'+toUsd(offer.amount * data.usdPrice)+') at',
 				    offer.rate.toFixed(2)+'%', offer.createDate, 'for', offer.duration, 'days');
 			handle.updateLoanOffer(offer, function(err, res) { // TODO: make this an update not a cancel!
-			    if (debug) {
+			    if (config.debug) {
 				console.log(res);
 			    }
 			    setTimeout(function() {
@@ -275,9 +275,9 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	    }
 	    console.log('  creating offer for', amount, currency, '($'+toUsd(amount * data.usdPrice)+') at',
 			data.targetRate.toFixed(2)+'% for', data.duration, 'days');
-	    if (makeAndCancelOffers) {
+	    if (config.makeAndCancelOffers) {
 		handle.createLoanOffer(currency, amount, Number(data.targetRate.toFixed(2)), data.duration, function(err, res) {
-		    if (debug) {
+		    if (config.debug) {
 			console.log(res);
 		    }
 		    setTimeout(function() {
