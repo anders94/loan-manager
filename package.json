@@ -10,12 +10,11 @@
     "async": "~2.0.1",
     "bitfinex": "~1.0.3",
     "moment": "~2.14.1",
-    "poloniex.js": "~0.0.6"
+    "poloniex.js": "~0.0.6",
+    "restify": "^4.3.0"
   },
-  "devDependencies": {
-  },
-  "scripts": {
-  },
+  "devDependencies": {},
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/anders94/loan-manager.git"

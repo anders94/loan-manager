@@ -1,11 +1,20 @@
 var connectors = require('./connectors');
 var strategies = require('./strategies');
 var config = require('./config');
+var restify = require('restify');
 var moment = require('moment');
 var async = require('async');
 
 var debug = false;
 var makeAndCancelOffers = true;
+
+var stats = {};
+var server = restify.createServer();
+server.get('/stats.json', function(req, res, next) {
+	res.send(stats);
+	next();
+    });
+server.listen(8080);
 
 async.forever(function(cb) {
     var usdTotal = 0;
@@ -34,6 +43,11 @@ async.forever(function(cb) {
 			    var rate = data.rateTotal / (data.loanTotal !== 0 ? data.loanTotal : 1); // covers divide by zero
 			    usdTotal += usd;
 			    rateTotal += usd * rate;
+
+			    if (!stats[exchangeName]) {
+				stats[exchangeName] = {};
+			    }
+			    stats[exchangeName][currency] = data;
 			}
 			cb();
 		    });
@@ -54,6 +68,9 @@ async.forever(function(cb) {
 	if (err) {
 	    console.log(err);
 	}
+	stats.usdTotal = '$'+toUsd(usdTotal);
+	stats.blendedRate = (rateTotal / usdTotal).toFixed(2)+'%';
+
 	console.log();
 	console.log('summary');
 	console.log('  grand total: $'+toUsd(usdTotal), 'loaned at', (rateTotal / usdTotal).toFixed(2)+'%');
