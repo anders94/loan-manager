@@ -40,6 +40,11 @@ Main configuration settings:
 Exchange specific configuration settings:
 * *credentials:* key and secret API settings from the exchange - these can also be passed as environment variables
 * *active:* this true or false turns loan management on or off for this currency
+* *duration:* configures the offered loan's duration (in days)
+  * *minimumDuration:* the minimum number of days offered loans will have - usually 2 and limited by the exchange
+  * *maximumDuration:* the maximum number of days offered loans will have - usually 30 or 60 and limited by the exchange
+  * *lowThreshold:* the percentage rate below which offered loans will be set to the minimumDuration
+  * *highThreshold:* the percentage rate above which offered loans will be set to the maximumDuration
 * *minimumRate:* minimum percentage rate below which `loan-manager` will not create loan offers
 * *minimumSizeUSD:* the value in US Dollars of the minimum loan amount. Exchanges have a lower limit on the amount
   of currency that can be offered in a single offer.
