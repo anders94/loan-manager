@@ -1,8 +1,7 @@
 var config = require('../../config');
 
-module.exports.rateBased = function(data, settings, exchangeName) {
+module.exports.rateBased = function(rate, settings, exchangeName) {
     var duration = 2;
-    var rate = data.targetRate;
 
     if (config && config.exchanges && config.exchanges[exchangeName] &&
 	config.exchanges[exchangeName].duration) {

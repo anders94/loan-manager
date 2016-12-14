@@ -168,7 +168,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
     function(cb) {
 	// 6. find duration
 	var strategy = strategies.loanDuration.rateBased;
-	data.duration = strategy(data, settings, exchangeName);
+	data.duration = strategy(data.targetRate, settings, exchangeName);
 	cb();
     },
     function(cb) {
@@ -229,7 +229,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
 		    if (config.makeAndCancelOffers && (offer.amount * data.usdPrice) >= settings.minimumSizeUSD) {
 			activity = true;
 			var durationStrategy = strategies.loanDuration.rateBased;
-			offer.duration = durationStrategy(data, settings, exchangeName);
+			offer.duration = durationStrategy(offer.rate, settings, exchangeName);
 			console.log('    updating', offer.amount.toFixed(8), offer.currency, '($'+toUsd(offer.amount * data.usdPrice)+') at',
 				    offer.rate.toFixed(2)+'%', offer.createDate, 'for', offer.duration, 'days');
 			handle.updateLoanOffer(offer, function(err, res) {
