@@ -200,11 +200,11 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	// 9. test all open offers to see if they should be updated or canceled
 	var activity = false;
 	async.eachSeries(data.loanOffers, function(offer, cb) {
-	    var strategy = strategies.updateLoan.outOfRange;
+	    var rateStrategy = strategies.updateLoan.outOfRange;
             if (settings.rateUpdateStrategy.name === 'lowerRateWithTime') {
-		strategy = strategies.updateLoan.lowerRateWithTime;
+		rateStrategy = strategies.updateLoan.lowerRateWithTime;
             }
-            strategy(offer, data, settings, exchangeName, function(err, offer) {
+            rateStrategy(offer, data, settings, exchangeName, function(err, offer) {
 		if (offer.action === 'cancel' || offer.rate < settings.minimumRate) {
 		    // cancel this offer
 		    if (config.makeAndCancelOffers) {
@@ -228,9 +228,11 @@ function manage(exchangeName, handle, currency, settings, cb) {
 		    // update this offer
 		    if (config.makeAndCancelOffers && (offer.amount * data.usdPrice) >= settings.minimumSizeUSD) {
 			activity = true;
+			var durationStrategy = strategies.loanDuration.rateBased;
+			offer.duration = durationStrategy(data, settings, exchangeName);
 			console.log('    updating', offer.amount.toFixed(8), offer.currency, '($'+toUsd(offer.amount * data.usdPrice)+') at',
 				    offer.rate.toFixed(2)+'%', offer.createDate, 'for', offer.duration, 'days');
-			handle.updateLoanOffer(offer, function(err, res) { // TODO: make this an update not a cancel!
+			handle.updateLoanOffer(offer, function(err, res) {
 			    if (config.debug) {
 				console.log(res);
 			    }
