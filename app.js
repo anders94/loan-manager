@@ -132,7 +132,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	    if (data.loanTotal > 0) {
 		console.log();
 		console.log('      total:', data.loanTotal.toFixed(8), currency, '($'+toUsd(data.loanTotal * data.usdPrice)+')',
-			    'at', (data.rateTotal / data.loanTotal).toFixed(2)+'%');
+			    'at', (data.rateTotal / data.loanTotal).toFixed(2)+'% on', exchangeName);
 	    }
 	    console.log();
 	    cb();
