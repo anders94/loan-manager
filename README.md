@@ -1,36 +1,42 @@
-# loan-manager
+loan-manager
+============
 Loan-manager automates positioning virtual and fiat currency loan offers on exchanges based on configured
 strategies. It runs regularly reading active loans, open loan offers and the lendbook for each currency
 on each exchange creating and updating loan offers based on the selected and configured strategy.
 
-## Supported Exchanges
+Supported Exchanges
+-------------------
 * [Bitfinex](https://www.bitfinex.com/)
 * [Poloniex](https://www.poloniex.com/)
 
-## Support the Project
-* BTC: `1FwVYgQCN5oDvbZCQrE3KwgkBECJ93kF5x`
+Setup
+-----
+*Clone this project:*
+```
+git clone https://github.com/anders94/loan-manager.git
+```
 
-## Setup
-**Clone this project:**
+*Install dependancies:*
+```
+npm install
+```
 
-```git clone https://github.com/anders94/loan-manager.git```
-
-**Install dependancies:**
-
-```npm install```
-
-Generate API keys on the exchanges you want managed. When creating Bitfinex keys, make sure "margin funding" 
+*Generate API Keys*
+Generate keys on the exchanges you want managed. When creating Bitfinex keys, make sure "margin funding" 
 has "write" capability. Poloniex keys don't require special access grants although an IP access list can be
 configured.
 
 Make sure there are funds available in the lending wallets. On Bitfinex, the lending wallet is the "deposit
 wallet".
 
-**Edit the configuration file:**
+*Set up the configuration file:*
+```
+cp config/index-example.js config/index.js
+```
 
-Edit `config/index.js` adding the keys and secrets to the exchange sections. Modify and add sections as 
-necessary for each exchange / currency you wish to lend. Be sure to closely follow the example configuration;
-`loan-manager` doesn't deal well with configuration errors.
+*Edit `config/index.js`*
+Add the keys and secrets to the exchange sections. Modify and add sections as necessary for each exchange / currency you wish to lend. Be sure to
+closely follow the example configuration; `loan-manager` doesn't deal well with configuration errors.
 
 Main configuration settings:
 * *loopDelayInMinutes:* Time in minutes between each run of the logic
@@ -58,15 +64,18 @@ Exchange specific configuration settings:
     lower the offer's rate by `lowerByPercent`. For example, if `lowerByPercent` is set to 10, an offer at 5.85% will
     be lowered by 10% to 5.256%.
 
-**Run the application:**
-
-```node app```
+Run the application
+-------------------
+```
+node app
+```
 
 The application will run in the foreground positioning loans using all available funds in the lending wallets.
 After running through each exchange and currency, `loan-manager` will wait the `loopDelayInMinutes` time and
 start over again continuously.
 
-## Example Output
+Example Output
+--------------
 ```
 -----------------------------------
 Tue Sep 13 2016 15:46:35 GMT-0400 (EDT)
@@ -141,15 +150,19 @@ summary
 done
 ```
 
-## FAQ
-
+FAQ
+---
 *Q: Because interest is compounded daily, isn't multiplying the daily rate by 365 to get the yearly rate incorrect?*
 
-A: Yes. More correctly we would raise the daily rate plus one to the 365th power but as you don't ever hold a loan
-   for an entire year, we more closely approximate the actual rate by simply multiplying the daily rate by 365.
+ A: Yes. More correctly we would raise the daily rate plus one to the 365th power but as you don't ever hold a loan
+    for an entire year, we more closely approximate the actual rate by simply multiplying the daily rate by 365.
 
 | Daily Rate | Daily * 365 | ((Daily+1)^365)-1 |
 |-----------:|------------:|------------------:|
 |      0.01% |       3.65% |             3.72% |
 |      0.05% |      18.25% |            20.02% |
 |      0.10% |      36.50% |            44.03% |
+
+Support the Project
+-------------------
+BTC: `1FwVYgQCN5oDvbZCQrE3KwgkBECJ93kF5x`
