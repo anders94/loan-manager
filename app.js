@@ -150,6 +150,9 @@ function manage(exchangeName, handle, currency, settings, cb) {
     function(cb) {
 	// 5. find desired rate
 	var strategy = strategies.createLoan.topOfTheBook;
+	if (settings.rateCreationStrategy.name === 'staticRate') {
+	    strategy = strategies.createLoan.staticRate;
+	}
 	if (settings.rateCreationStrategy.name === 'percentDepth') {
 	    strategy = strategies.createLoan.percentDepth;
 	}

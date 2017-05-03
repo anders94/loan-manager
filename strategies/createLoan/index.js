@@ -1,4 +1,8 @@
-module.exports.topOfTheBook = function(data, settings, exchangeName, cb) {
+module.exports.staticRate = function (data, settings, exchangeName, cb) {
+    cb(null, settings.rateCreationStrategy.rate);
+};
+
+module.exports.topOfTheBook = function (data, settings, exchangeName, cb) {
     if (data && data.lendbook && data.lendbook.offers && data.lendbook.offers.length > 0) {
 	cb(null, data.lendbook.offers[0].rate);
     }
