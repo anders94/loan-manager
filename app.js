@@ -153,7 +153,7 @@ function manage(exchangeName, handle, currency, settings, cb) {
 	if (settings.rateCreationStrategy.name === 'staticRate') {
 	    strategy = strategies.createLoan.staticRate;
 	}
-	if (settings.rateCreationStrategy.name === 'percentDepth') {
+	else if (settings.rateCreationStrategy.name === 'percentDepth') {
 	    strategy = strategies.createLoan.percentDepth;
 	}
 	strategy(data, settings, exchangeName, function(err, rate) {
