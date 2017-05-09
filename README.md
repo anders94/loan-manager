@@ -64,8 +64,9 @@ necessary for each exchange / currency you wish to lend. Be sure to closely foll
 * *maximumSizeUSD:* the value in US Dollars of the maximum loan amount. Use this if you want to limit the upper 
   bounds of what the `loan-manager` will offer in a single offer.
 * *rateCreationStrategy:* names and configures the strategy to be used when creating loans. Valid names include
-  `topOfTheBook` and `percentDepth`.
+  `topOfTheBook`, `staticRate` and `percentDepth`.
   * *topOfTheBook:* Positions offers at the same rate as the top offer in the book. No other parameters are necessary.
+  * *staticRate:* Requires `rate` which describes the interest rate
   * *percentDepth:* Requires `lendbookPositioningPercentage` which describes how deep into the book to position the
     offer. For example, `10` would position the offers at whatever rate is 10% into the book by volume.
 * *rateUpdateStrategy:* names and configures the strategy to be used when evaluating open loan offers. Valid names
