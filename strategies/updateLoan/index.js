@@ -17,6 +17,9 @@ module.exports.lowerRateWithTime = function(offer, data, settings, exchangeName,
         if (settings.minimumRate < offer.rate) {
             offer.action = 'update';
         }
+        else {
+            offer.rate = settings.minimumRate;
+        }
     }
 
     cb(null, offer);
