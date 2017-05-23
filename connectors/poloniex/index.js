@@ -135,7 +135,7 @@ Connector.prototype.cancelLoanOffer = function(id, cb) {
 Connector.prototype.updateLoanOffer = function(offer, cb) {
     var handle = this.handle;
     handle.cancelLoanOffer(offer.id, function(err, res) {
-	if (err) {
+	if (!err) {
 	    var dailyRate = offer.rate / 365 / 100;
 	    handle.createLoanOffer(offer.currency.toUpperCase(), offer.amount,
 				   offer.duration, 0, dailyRate, function(err, res) {
