@@ -89,7 +89,7 @@ Connector.prototype.lendbook = function(currency, cb) {
 		lendbook.offers.push({createDate: moment(item.date).format(),
 				      currency: currency.toLowerCase(),
 				      rate: Number(item.rate) * 365 * 100,
-				      duration: item.duration,
+				      duration: item.durationMax,
 				      amount: Number(item.amount)});
 	    }
             for (var x in res.demands) {
@@ -97,7 +97,7 @@ Connector.prototype.lendbook = function(currency, cb) {
 		lendbook.demands.push({createDate: moment(item.date).format(),
 				       currency: currency.toLowerCase(),
 				       rate: Number(item.rate) * 365 * 100,
-				       duration: item.duration,
+				       duration: item.durationMax,
 				       amount: Number(item.amount)});
             }
             cb(null, lendbook);
