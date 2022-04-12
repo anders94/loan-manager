@@ -9,7 +9,7 @@
   "dependencies": {
     "async": "~2.0.1",
     "bitfinex": "~1.0.3",
-    "moment": "~2.19.3",
+    "moment": "~2.29.2",
     "poloniex.js": "~0.0.6",
     "restify": "^4.3.0"
   },
